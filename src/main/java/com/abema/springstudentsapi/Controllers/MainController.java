@@ -7,8 +7,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.FloatBuffer;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 @RestController
@@ -31,15 +33,21 @@ public class MainController {
     }
     @PostMapping
     public ResponseEntity<Student> createStudent(@RequestBody Map<String, String> json){
-        studentRepository.save(new Student(
-                String.valueOf(json.get("id")),
+        Student student = new Student(
+                Long.parseLong(json.get("id")),
                 json.get("first_name"),
                 json.get("last_name"),
                 json.get("email"),
-                json.get("avg_grade"),
-                String.valueOf(json.get("semester"))
-                )
+                Double.parseDouble(json.get("avg_grade")),
+                Integer.parseInt(json.get("semester"))
         );
-        return new ResponseEntity<>();
+        if (
+                studentRepository.findById(student.getId()).isPresent() &&
+                Objects.equals(student.getId(), studentRepository.findById(student.getId()).get().getId()) )
+        {
+            return new ResponseEntity<>(studentRepository.findById(student.getId()).get(), HttpStatus.FOUND);
+        }
+        studentRepository.saveAndFlush(student);
+        return new ResponseEntity<>(student, HttpStatus.CREATED);
     }
 }
