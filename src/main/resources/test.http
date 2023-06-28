@@ -1,0 +1,18 @@
+###
+GET http://localhost:8080/students
+
+<> 2023-06-29T013124.200.json
+<> 2023-06-29T010831.200.json
+
+###
+POST http://localhost:8080/students
+Content-Type: application/json
+
+{
+  "id": "3",
+  "first_name": "Artur",
+  "last_name": "Trayan",
+  "email": "qwe123@mail.ru",
+  "avg_grade": "2.33",
+  "semester": "5"
+}
